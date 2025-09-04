@@ -2,7 +2,7 @@
   "name": "metropodz_mvp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
@@ -10,7 +10,10 @@
     "dev:watch": "nodemon --watch src --ext ts --exec ts-node src/app.ts",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "migrate": "psql -d your_database_name -f src/migrations/001_initial_schema.sql"
+    "migrate": "psql -d metropodz -f src/migrations/001_initial_schema.sql"
+  },
+  "engines": {
+    "node": "22.x"
   },
   "keywords": [],
   "author": "",
