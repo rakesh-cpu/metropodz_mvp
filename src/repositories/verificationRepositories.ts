@@ -18,7 +18,6 @@ export class VerificationRepository {
       
       let sql = `SELECT * FROM user_verification WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1`;
       let result = await client.query(sql, [userId]);
-      
       if (result.rows.length > 0) {
         await client.query('COMMIT');
         return this.mapToUserVerification(result.rows[0]);
@@ -36,7 +35,7 @@ export class VerificationRepository {
         metadata?.user_agent || null,
         metadata?.device_info ? JSON.stringify(metadata.device_info) : null
       ];
-      
+
       result = await client.query(sql, values);
       await client.query('COMMIT');
       
@@ -292,42 +291,56 @@ export class VerificationRepository {
     const result = await pool.query(sql);
     return result.rowCount || 0;
   }
-
   private mapToUserVerification(row: any): UserVerification {
-    return {
-      id: row.id,
-      verification_id: row.verification_id,
-      user_id: row.user_id,
-      aadhar_number: row.aadhar_number,
-      aadhar_ref_id: row.aadhar_ref_id,
-      aadhar_otp_generated_at: row.aadhar_otp_generated_at,
-      aadhar_verified_at: row.aadhar_verified_at,
-      verified_name: row.verified_name,
-      verified_dob: row.verified_dob,
-      verified_gender: row.verified_gender,
-      verified_email: row.verified_email,
-      verified_address: row.verified_address,
-      verified_care_of: row.verified_care_of,
-      verified_pincode: row.verified_pincode,
-      verified_state: row.verified_state,
-      verified_district: row.verified_district,
-      year_of_birth: row.year_of_birth,
-      mobile_hash: row.mobile_hash,
-      share_code: row.share_code,
-      selfie_image_url: row.selfie_image_url,
-      aadhar_image_url: row.aadhar_image_url,
-      verification_status: row.verification_status,
-      verification_notes: row.verification_notes,
-      admin_remarks: row.admin_remarks,
-      ip_address: row.ip_address,
-      user_agent: row.user_agent,
-      device_info: row.device_info ? JSON.parse(row.device_info) : null,
-      created_at: row.created_at,
-      updated_at: row.updated_at,
-      verified_at: row.verified_at,
-      expires_at: row.expires_at
-    };
+  let deviceInfo: any = null;
+
+  if (row.device_info) {
+    if (typeof row.device_info === 'string') {
+      try {
+        deviceInfo = JSON.parse(row.device_info);
+      } catch {
+        deviceInfo = row.device_info;
+      }
+    } else {
+      deviceInfo = row.device_info;
+    }
   }
+
+  return {
+    id: row.id,
+    verification_id: row.verification_id,
+    user_id: row.user_id,
+    aadhar_number: row.aadhar_number,
+    aadhar_ref_id: row.aadhar_ref_id,
+    aadhar_otp_generated_at: row.aadhar_otp_generated_at,
+    aadhar_verified_at: row.aadhar_verified_at,
+    verified_name: row.verified_name,
+    verified_dob: row.verified_dob,
+    verified_gender: row.verified_gender,
+    verified_email: row.verified_email,
+    verified_address: row.verified_address,
+    verified_care_of: row.verified_care_of,
+    verified_pincode: row.verified_pincode,
+    verified_state: row.verified_state,
+    verified_district: row.verified_district,
+    year_of_birth: row.year_of_birth,
+    mobile_hash: row.mobile_hash,
+    share_code: row.share_code,
+    selfie_image_url: row.selfie_image_url,
+    aadhar_image_url: row.aadhar_image_url,
+    verification_status: row.verification_status,
+    verification_notes: row.verification_notes,
+    admin_remarks: row.admin_remarks,
+    ip_address: row.ip_address,
+    user_agent: row.user_agent,
+    device_info: deviceInfo,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    verified_at: row.verified_at,
+    expires_at: row.expires_at,
+  };
+}
+
 }
 
 export const verificationRepository = new VerificationRepository();

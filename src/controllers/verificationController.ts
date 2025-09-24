@@ -16,7 +16,7 @@ const verificationService = new VerificationService();
 export const generateAadharVerificationOTP = async (req: Request, res: Response): Promise<void> => {
   try {
     const { aadhar_number,user_id }: GenerateAadharOTPRequest = req.body;
-    
+    console.log("aadhar_number",aadhar_number);
     if (!aadhar_number || !/^\d{12}$/.test(aadhar_number)) {
       res.status(400).json({
         success: false,

@@ -43,14 +43,14 @@ export class VerificationService {
     try {
       const verification = await verificationRepository.getOrCreateVerification(request.user_id, metadata);
       
-      const attemptCount = await verificationRepository.getAttemptsCount(
-        verification.verification_id, 
-        'aadhar_otp_generation'
-      );
+      // const attemptCount = await verificationRepository.getAttemptsCount(
+      //   verification.verification_id, 
+      //   'aadhar_otp_generation'
+      // );
       
-      if (attemptCount >= this.config.max_verification_attempts) {
-        throw new Error('Maximum OTP generation attempts exceeded. Please try again later.');
-      }
+      // if (attemptCount >= this.config.max_verification_attempts) {
+      //   throw new Error('Maximum OTP generation attempts exceeded. Please try again later.');
+      // }
 
       
       const otpResponse = await this.cashfreeService.generateAadharOTP(request.aadhar_number);
@@ -62,12 +62,12 @@ export class VerificationService {
         otpResponse.ref_id
       );
     
-      await verificationRepository.logAttempt(
-        verification.verification_id,
-        'aadhar_otp_generation',
-        { aadhar_number: this.maskAadharNumber(request.aadhar_number) },
-        true
-      );
+      // await verificationRepository.logAttempt(
+      //   verification.verification_id,
+      //   'aadhar_otp_generation',
+      //   { aadhar_number: this.maskAadharNumber(request.aadhar_number) },
+      //   true
+      // );
 
       return {
         verification_id: verification.verification_id,
@@ -82,16 +82,16 @@ export class VerificationService {
 
     } catch (error: any) {
     
-      const verification = await verificationRepository.findByUserId(request.user_id);
-      if (verification) {
-        await verificationRepository.logAttempt(
-          verification.verification_id,
-          'aadhar_otp_generation',
-          { aadhar_number: this.maskAadharNumber(request.aadhar_number) },
-          false,
-          error.message
-        );
-      }
+      // const verification = await verificationRepository.findByUserId(request.user_id);
+      // if (verification) {
+      //   await verificationRepository.logAttempt(
+      //     verification.verification_id,
+      //     'aadhar_otp_generation',
+      //     { aadhar_number: this.maskAadharNumber(request.aadhar_number) },
+      //     false,
+      //     error.message
+      //   );
+      // }
       
       throw new Error(`Generate Aadhar OTP failed: ${error.message}`);
     }
