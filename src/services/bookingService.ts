@@ -40,6 +40,9 @@ export class BookingService {
           (check_in >= $2 AND check_out <= $3)
         )
       `;
+
+      // where check_in < $3 AND check_out > $2; 
+      // select id from bookings where pod_id = $1 and booking_status = 'confirmed' and (check_in,check_out) overlaps ($2,$3);
       const conflictResult = await client.query(conflictQuery, [pod_id, check_in, check_out]);
 
       if (conflictResult.rows.length > 0) {

@@ -4,7 +4,7 @@ import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
 
-router.post('/', authenticateToken, createBooking);
+router.post('/', authenticateToken,createBooking);
 router.get('/user', authenticateToken, getUserBookings);
 router.get('/:bookingId', authenticateToken, getBooking);
 router.put('/:bookingId/confirm', authenticateToken, confirmBooking);
