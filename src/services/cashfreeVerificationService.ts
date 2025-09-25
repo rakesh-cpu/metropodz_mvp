@@ -7,6 +7,7 @@ export class CashfreeVerificationService {
   private config: CashfreeConfig;
 
   constructor(config: CashfreeConfig) {
+    console.log("Cashfree config",config.baseUrl);
     this.config = config;
     this.client = axios.create({
       baseURL: config.baseUrl,
